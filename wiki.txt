@@ -1,0 +1,4 @@
+没有使用maven管理依赖，需要自行下载mybatis的包解压，在IDE中引入mybatis的jar以及lib下的jar
+使用apache log4j打印日志，在lib下已经包含了打印日志需要的jar
+需要建一个mybatis的数据库
+create table T_ROLE(id int(20) not null auto_increment, role_name varchar(60), note varchar(1024), primary key(id));
