@@ -3,8 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.learn.chapter2.mapper.RoleMapper">
-    <select id="getRole" parameterType="long" resultType="role">
-        select id, role_name as roleName, note from t_role where id = #{id}
+    <resultMap id="roleMap" type="role">
+        <id column="id" property="id" javaType="long" jdbcType="BIGINT"/>
+        <result column="role_name" property="roleName" javaType="string" jdbcType="VARCHAR"/>
+        <result column="note" property="note" typeHandler="com.learn.chapter3.typeHandler.MyStringTypeHandler"/>
+    </resultMap>
+    <select id="getRole" parameterType="long" resultMap="roleMap">
+        select id, role_name, note from t_role where id = #{id}
+    </select>
+    <!--
+    下面的select参数和结果都会走自定义TypeHandler
+    在使用roleMap的情况下，如果写role_name as roleName，是错的
+    role_name不走TypeHandler，select出的roleName也是null
+    -->
+    <select id="findRole" parameterType="string" resultMap="roleMap">
+        select id, role_name, note from t_role where role_name like
+        concat('%', #{roleName javaType=string, jdbcType=VARCHAR, typeHandler=com.learn.chapter3.typeHandler.MyStringTypeHandler},'%')
     </select>
     <insert id="insertRole" parameterType="role">
         insert into t_role(role_name, note) values (#{roleName}, #{note})
